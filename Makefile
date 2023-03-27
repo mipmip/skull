@@ -7,6 +7,10 @@ build:
 	@mkdir -p $(OUT_DIR)
 	@crystal build -o $(OUT_DIR)/skull src/skull.cr
 
+install: build
+	mkdir -p $(PREFIX)/bin
+	cp ./bin/skull $(PREFIX)/bin
+
 run:
 	$(OUT_DIR)/skull
 
