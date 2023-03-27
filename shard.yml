@@ -1,0 +1,17 @@
+name: skull
+version: 0.1.0
+
+authors:
+  - Pim Snel <post@pimsnel.com>
+
+targets:
+  skull:
+    main: src/skull.cr
+
+crystal: 1.2.2
+
+dependencies:
+  clim:
+    github: at-grandpa/clim
+
+license: MIT
