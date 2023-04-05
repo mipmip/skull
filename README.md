@@ -1,18 +1,71 @@
-# skull
+# Skull
 
-TODO: Write a description here
+**Skull** helps developers with multiple computers and hundreds of projects,
+cloning their repo's at the correct location using a central catalog-file.
+
+## Why
+
+Besides DRY, having a predefined directory layout for all your code-projects,
+allows you to do more automation. I wrote skull after I start using
+[gs-git](https://github.com/mipmip/gs-git), a git monitor which checks for
+dirty git repo's.
 
 ## Installation
 
-TODO: Write installation instructions here
+You need crystal to build skull.
+
+```
+clone https://github.com/mipmip/skull
+cd skull
+shards
+make
+./bin/skull
+```
+
+## Configuration
+
+Create a skull catalog file at `~/.config/skulls.yaml`.
+
+Populate with repo-groups and repo's:
+
+```yaml
+home:
+  base_dir: ~/
+  repos:
+    - source: mipmip/secondbrain
+    - source: mipmip/nixos
+
+forks:
+  base_dir: ~/cForks
+  repos:
+    - source: mipmip/hugoDocs
+    - source: mipmip/hugo
+    - source: mipmip/nixpkgs
+    - source: mipmip/NUR
+    - source: mipmip/nur-search
+    - source: mipmip/octokit.cr
+    - source: mipmip/sc-im
+    - source: mipmip/smug
+    - source: mipmip/nixos-homepage
+```
 
 ## Usage
 
-TODO: Write usage instructions here
+```
+skull help
+skull [subcommand] help
+```
 
 ## Development
 
-TODO: Write development instructions here
+Use crystal, if you have nix and flakes you can run
+
+```
+nix develop
+shards
+make
+./bin/skull -c test/skull.yaml
+```
 
 ## Contributing
 
