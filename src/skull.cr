@@ -43,27 +43,23 @@ module Skull
         desc "clone"
 
         option "-v", "--verbose", type: Bool, desc: "Be verbose"
+        option "-c /path/to/config.yml", "--config", type: String, desc: "config file to use"
 
         argument "group",
           desc: "group",
           type: String,
-          required: false
+          required: true
 
         argument "reponr",
           desc: "number of repo",
           type: Int8,
           required: true
 
-        argument "path",
-          desc: "conf file",
-          type: String,
-          required: false
-
-        usage "skull clone [GROUP ] [REPO NR] [PATH] [options]"
+        usage "skull clone [group] [repo-nr] [options]"
 
         run do |opts, args|
           config = Skull::Config.new
-          repoconf = config.read(args.path)
+          repoconf = config.read(opts.config)
 
           base_dir = repoconf.as_h[args.group].as_h["base_dir"].as_s
           repo_source = repoconf.as_h[args.group].as_h["repos"].as_a[(args.reponr-1)].as_h["source"].as_s
@@ -79,39 +75,46 @@ module Skull
         end
       end
 
-      sub "show" do
-        desc "show conf"
+      sub "list" do
+        desc "list groups"
 
         option "-v", "--verbose", type: Bool, desc: "Be verbose"
+        option "-c /path/to/config.yml", "--config", type: String, desc: "config file to use"
+
+        usage "skull list [options]"
+
+        run do |opts, args|
+          config = Skull::Config.new
+          repoconf = config.read(opts.config)
+
+          repoconf.as_h.keys.each do | group |
+            print group.as_s + ": " + repoconf.as_h[group.as_s].as_h["base_dir"].as_s + "\n"
+          end
+
+        end
+      end
+
+      sub "show" do
+        desc "show group config"
+
+        option "-v", "--verbose", type: Bool, desc: "Be verbose"
+        option "-c /path/to/config.yml", "--config", type: String, desc: "config file to use"
 
         argument "group",
           desc: "group",
           type: String,
-          required: false
+          required: true
 
-        argument "path",
-          desc: "conf file",
-          type: String,
-          required: false
-
-        usage "skull show [GROUP ] [PATH] [options]"
+        usage "skull show [group] [options]"
 
         run do |opts, args|
           config = Skull::Config.new
-          repoconf = config.read(args.path)
+          repoconf = config.read(opts.config)
 
-          if args.group.nil?
-            idx = 1
-            repoconf.as_h.keys.each do | group |
-              print idx.to_s + ". " + group.as_s + ": " + repoconf.as_h[group.as_s].as_h["base_dir"].as_s + "\n"
-              idx += 1
-            end
-          else
-            idx = 1
-            repoconf.as_h[args.group].as_h["repos"].as_a.each do | repo |
-              print idx.to_s + ". " + File.join(repoconf.as_h[args.group].as_h["base_dir"].as_s, repo.as_h["source"].as_s) + "\n"
-              idx += 1
-            end
+          idx = 1
+          repoconf.as_h[args.group].as_h["repos"].as_a.each do | repo |
+            print idx.to_s + ". " + File.join(repoconf.as_h[args.group].as_h["base_dir"].as_s, repo.as_h["source"].as_s) + "\n"
+            idx += 1
           end
 
         end
