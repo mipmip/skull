@@ -67,6 +67,15 @@ make
 ./bin/skull -c test/skull.yaml
 ```
 
+### New release
+
+update `CHANGELOG.md`
+update `src/skull/version`
+update `shards.yml`
+`git tag vX.X.X`
+`git push --tags`
+`gh browse` + release stuff
+
 ## Contributing
 
 1. Fork it (<https://github.com/mipmip/skull/fork>)
