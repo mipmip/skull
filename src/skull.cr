@@ -63,9 +63,14 @@ module Skull
 
           base_dir = repoconf.as_h[args.group].as_h["base_dir"].as_s
           repo_source = repoconf.as_h[args.group].as_h["repos"].as_a[(args.reponr-1)].as_h["source"].as_s
-          dest_dir = repo_source.split("/").last.gsub(".git","")
 
-          command = "git clone git@github.com:" + repo_source + ".git " + File.join(base_dir, dest_dir)
+          dest_dir = repo_source.split("/").last.gsub(".git","")
+          if repo_source.includes? "@"
+            command = "git clone git@github.com:" + repo_source + ".git " + File.join(base_dir, dest_dir)
+          else
+            command = "git clone " + repo_source + " " + File.join(base_dir, dest_dir)
+          end
+
           if opts.verbose
             print command + "\n"
           end
