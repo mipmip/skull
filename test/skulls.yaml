@@ -9,3 +9,4 @@ test:
   base_dir: /tmp/
   repos:
     - source: mipmip/awesomewm-screenshots
+    - source: https://github.com/mipmip/mip.rs.git
