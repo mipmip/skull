@@ -65,10 +65,10 @@ module Skull
           repo_source = repoconf.as_h[args.group].as_h["repos"].as_a[(args.reponr-1)].as_h["source"].as_s
 
           dest_dir = repo_source.split("/").last.gsub(".git","")
-          if repo_source.includes? "@"
-            command = "git clone git@github.com:" + repo_source + ".git " + File.join(base_dir, dest_dir)
-          else
+          if repo_source.includes?("@") || repo_source.starts_with?("http")
             command = "git clone " + repo_source + " " + File.join(base_dir, dest_dir)
+          else
+            command = "git clone git@github.com:" + repo_source + ".git " + File.join(base_dir, dest_dir)
           end
 
           if opts.verbose
@@ -117,8 +117,14 @@ module Skull
           repoconf = config.read(opts.config)
 
           idx = 1
+          print args.group + "\n"
+          args.group.size.times do
+            print "-"
+          end
+          print "\n"
           repoconf.as_h[args.group].as_h["repos"].as_a.each do | repo |
-            print idx.to_s + ". " + File.join(repoconf.as_h[args.group].as_h["base_dir"].as_s, repo.as_h["source"].as_s) + "\n"
+            dest_dir = repo.as_h["source"].as_s.split("/").last.gsub(".git","")
+            print idx.to_s + ". " + repo.as_h["source"].as_s + " > " + File.join(repoconf.as_h[args.group].as_h["base_dir"].as_s, dest_dir) + "\n"
             idx += 1
           end
 
