@@ -35,19 +35,17 @@ home:
     - source: mipmip/secondbrain
     - source: mipmip/nixos
 
-forks:
-  base_dir: ~/cForks
+test:
+  base_dir: /tmp/
   repos:
-    - source: mipmip/hugoDocs
-    - source: mipmip/hugo
-    - source: mipmip/nixpkgs
-    - source: mipmip/NUR
-    - source: mipmip/nur-search
-    - source: mipmip/octokit.cr
-    - source: mipmip/sc-im
-    - source: mipmip/smug
-    - source: mipmip/nixos-homepage
+    - source: mipmip/awesomewm-screenshots
+    - source: https://github.com/mipmip/mip.rs.git
 ```
+
+Source can be a full git source URL or just shortened github url. Shortened
+github urls translate to a SSH URI.
+
+`mipmip/awesomewm-screenshots` will translates to `git clone git@github.com:mipmip/awesomewm-screenshots`
 
 ## Usage
 
