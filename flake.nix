@@ -3,41 +3,44 @@
 
   inputs = {
     nixpkgs.url = github:nixos/nixpkgs/nixos-22.11;
-    flake-utils.url = github:numtide/flake-utils;
     crystal-flake.url = github:manveru/crystal-flake;
   };
 
-  outputs = inputs:
-    let
-      utils = inputs.flake-utils.lib;
-    in
-    utils.eachSystem
-      [
-        "x86_64-linux"
-      ]
-      (system:
-        let
-          nixpkgs = import inputs.nixpkgs {
-            inherit system;
-          };
+  outputs = inputs@{self, nixpkgs, crystal-flake}:
+  let
+    supportedSystems = [ "x86_64-linux" "x86_64-darwin" "aarch64-linux" "aarch64-darwin" ];
+    forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
+    nixpkgsFor = forAllSystems (system: import nixpkgs { inherit system; });
+  in
+    {
 
-          crystalflake-pkg = inputs.crystal-flake.packages.${system};
-        in
+    packages = forAllSystems (system:
+      let
+        pkgs = nixpkgsFor.${system};
+      in
         {
+        skull = pkgs.callPackage ./package.nix { };
+      });
 
-          devShells.default = nixpkgs.pkgs.mkShell {
-            buildInputs = with nixpkgs.pkgs; [
-              crystal
-              crystal2nix
-              shards
-              gnumake
-            ];
+    defaultPackage = forAllSystems (system: self.packages.${system}.skull);
+    devShells = forAllSystems (system:
+      let
+        pkgs = nixpkgsFor.${system};
+      in
+        {
+        default = pkgs.mkShell {
+          nativeBuildInputs = with pkgs; [
+            crystal
+            shards
+          ];
+          buildInputs = with pkgs; [
+            crystal
+            crystal2nix
+            shards
+            gnumake
+          ];
+        };
+      });
 
-            nativeBuildInputs = with nixpkgs.pkgs; [
-              crystal
-              shards
-            ];
-          };
-        });
+  };
 }
-
