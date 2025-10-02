@@ -1,5 +1,7 @@
 # Skull
 
+**The Skull project has moved to CodeBerg** [https://codeberg.org/mipmip/skull](https://codeberg.org/mipmip/skull)
+
 **Skull** helps developers with multiple computers and hundreds of projects,
 cloning their repo's at the correct location using a central catalog-file.
 
